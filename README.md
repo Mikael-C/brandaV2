@@ -48,6 +48,4 @@ To deploy this project:
 
 ---
 
-## Written Answers
 
-(Please refer to `ANSWERS.md` in the root directory for the detailed responses to Tasks 2, 3, 4, and 5).
