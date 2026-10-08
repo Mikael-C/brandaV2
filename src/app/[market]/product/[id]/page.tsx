@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import AddToCartForm from '@/components/AddToCartForm';
 import ProductCard from '@/components/ProductCard';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: { market: string; id: string } }) {
   const product = MOCK_PRODUCTS.find((p) => p.id === params.id);
   if (!product) return { title: 'Product Not Found' };
   
@@ -13,6 +13,15 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     description: product.description,
     openGraph: {
       images: [product.image],
+    },
+    alternates: {
+      canonical: `/${params.market}/product/${params.id}`,
+      languages: {
+        'en-NG': `/ng/product/${params.id}`,
+        'en-US': `/us/product/${params.id}`,
+        'en-GB': `/uk/product/${params.id}`,
+        'en-CA': `/ca/product/${params.id}`,
+      },
     },
   };
 }
@@ -44,8 +53,26 @@ export default function ProductDetailPage({
     ? getPrice(product.startingPrice * (1 - product.discount / 100), market)
     : null;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.image,
+    description: product.description,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: market.toUpperCase(),
+      price: product.discount ? product.startingPrice * (1 - product.discount / 100) : product.startingPrice,
+      availability: 'https://schema.org/InStock',
+    },
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Product Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Gallery */}

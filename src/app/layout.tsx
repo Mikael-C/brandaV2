@@ -5,6 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.branda.com.ng'),
   title: 'Branda V2',
   description: 'A branding ecosystem across multiple markets',
 };
